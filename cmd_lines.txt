@@ -1,0 +1,20 @@
+lancer mongo :
+	sudo mongod -> dans 1 onglet
+	mongo -> dans 1 autre onglet
+
+créer -> db.collectionName.insert(…)
+read -> db.collectionName.find(…)
+update -> db.collectionName.update({ id : 8 }, { $set : { name : "" }})
+delete -> db.collectionName.remove(…)
+
+lister toutes les bdd :
+	show dbs
+
+utiliser une bdd (ou la créer) :
+	use databaseName
+
+lister toutes les collections d’une bdd (tables) :
+	show collections
+
+
+localhost:9000/api/pokemons
