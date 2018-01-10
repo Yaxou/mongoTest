@@ -1,25 +1,36 @@
-require('colors'); 
-const helmet = require('helmet') 
-const morgan = require('morgan') 
-const express = require('express') 
-const MongoClient = require('mongodb').MongoClient 
- 
-const app = express() 
-let db = null; 
- 
-MongoClient.connect('mongodb://localhost:27017', (err, client) => { 
- 
-    db = client.db('pokemons') 
- 
-    app.use(helmet()) 
-    app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev')) 
- 
-    app.get('/api/pokemons', (request, response) => { 
-        db.collection('pokemons').find({}).toArray((err, pokemons) => { 
-            response.json(pokemons) 
-        }) 
-    }) 
- 
-    app.listen(9000, () => console.log(`L'application écoute sur le port 9000`.black.bgGreen)) 
-}) 
- 
+require('colors')
+const helmet = require('helmet')
+const express = require('express')
+const morgan = require('morgan')
+const mongoose = require('mongoose');
+const assert = require('assert')
+const PokemonController = require('./controllers/Pokemon')
+
+
+const app = express()
+
+app.use(helmet())
+app.use(morgan(process.env.NODE_DEV === 'production' ?  'combined' : 'dev'))
+
+app.get('/api/pokemons', PokemonController.findAll)
+
+
+// Configuration
+app.set('ip', 'localhost')
+app.set('port', 9000)
+
+const startApp = app => {
+    return new Promise( (resolve, reject) => {
+        const server = app.listen(app.get('port'), app.get('ip'), resolve)
+        server.on('error', reject)
+    } );
+}
+
+mongoose
+    .connect('mongodb://localhost:27017/pokemons', {useMongoClient:true})
+    .then(() => console.log(`MongoDB : Connexion établie`.bgGreen.black))
+    .then(() => startApp(app))
+    .then(() => console.log(
+        `L'application est en route sur http://${app.get('ip')}:${app.get('port')}`.bgGreen.black
+    ))
+    .catch( err => console.log(err.messages.bgRed.black) )
