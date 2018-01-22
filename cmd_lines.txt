@@ -1,6 +1,6 @@
 lancer mongo :
-	sudo mongod -> dans 1 onglet
-	mongo -> dans 1 autre onglet
+	mongod -> dans 1 onglet
+	nodemon server.js -> dans 1 autre onglet
 
 créer -> db.collectionName.insert(…)
 read -> db.collectionName.find(…)

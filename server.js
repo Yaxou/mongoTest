@@ -13,6 +13,7 @@ app.use(helmet())
 app.use(morgan(process.env.NODE_DEV === 'production' ?  'combined' : 'dev'))
 
 app.get('/api/pokemons', PokemonController.findAll)
+app.get('/api/pokemons/:id', PokemonController.findOne)
 
 
 // Configuration
